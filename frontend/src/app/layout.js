@@ -6,7 +6,7 @@ import MotionProviders from "@/components/MotionProviders";
 export const metadata = {
   title: "Finsight — Clarity for your money",
   description:
-    "Finsight is a secure personal finance platform that turns your transactions into decisions: what you can afford, how healthy your finances are, and where to go next.",
+    "AI-Powered Personal Finance and Decision Support Platform",
 };
 
 export default function RootLayout({ children }) {
