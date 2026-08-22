@@ -17,7 +17,7 @@ export const MONTH_OPTIONS = [
   { value: 12, label: "December" },
 ];
 
-export const YEAR_OPTIONS = [2024, 2025, 2026, 2027];
+export const YEAR_OPTIONS = [2024, 2025, 2026, 2027, 2028];
 
 export default function PeriodSelector({
   periodMode,
@@ -114,7 +114,7 @@ export default function PeriodSelector({
         {loading && (
           <span className="text-xs text-horizon font-editorial animate-pulse flex items-center gap-1.5">
             <span className="inline-block h-2 w-2 rounded-full bg-horizon animate-ping" />
-            Updating entries…
+            Refreshing financial data…
           </span>
         )}
       </div>
