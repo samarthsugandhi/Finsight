@@ -17,7 +17,7 @@ export default function PageLoader({ active, onComplete }) {
   const videoRef = useRef(null);
   const lineRef = useRef(null);
 
-  const statusText = useMemo(() => (counter < 100 ? "loading" : "ready"), [counter]);
+  const statusText = useMemo(() => (counter < 100 ? "Loading Finsight dashboard data..." : "ready"), [counter]);
 
   useEffect(() => {
     if (!active) {
