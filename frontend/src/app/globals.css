@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+/* 
+   Finsight Overhauled Design System — "Finova Infused"
+   Custom fonts: FK Screamer (headlines) & PP Editorial New (serif brand accents)
+   Default body: Clean, highly legible system sans-serif (Inter / Segoe UI)
+   Color palettes:
+     - Light Mode: Warm off-white (paper), dark navy (ink), amber horizon.
+     - Dark Mode: Deep navy slate (Finova bg), charcoal (Finova card), Neon Lime Green (Finova accent).
+*/
+
+@font-face {
+  font-family: "FK Screamer";
+  font-weight: 300;
+  src: url("/fonts/fk-screamer.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Editorial New";
+  font-weight: 300;
+  src: url("/fonts/pp-editorial-new-regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Editorial New";
+  font-weight: 700;
+  src: url("/fonts/pp-editorial-new-bold.ttf") format("truetype");
+  font-display: swap;
+}
+
+:root {
+  /* Light theme values */
+  --color-paper: #f6f4ef;       /* warm off-white */
+  --color-paper-raised: #ffffff;
+  --color-ink: #0f1b33;         /* deep navy */
+  --color-ink-soft: #435066;
+  --color-horizon: #e2a33d;     /* original amber accent */
+  --color-horizon-dim: #f6e2b8;
+  --color-signal-pos: #2f8f66;  /* positive */
+  --color-signal-neg: #a23e48;  /* negative */
+  --color-line: #dfd9cc;        /* hairline border */
+  
+  --font-display: "FK Screamer", Georgia, "Iowan Old Style", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", "IBM Plex Mono", Menlo, Consolas, monospace;
+}
+
+/* Dark theme overrides (toggled by ThemeContext on html/body element) */
+.dark, :root.dark {
+  --color-paper: #080b12;       /* Finova deep background */
+  --color-paper-raised: #0d1117; /* Finova surface */
+  --color-ink: #ffffff;         /* Pure white text for absolute readability */
+  --color-ink-soft: #d1d5db;    /* High contrast cool gray for subtexts */
+  --color-horizon: #d6ff62;     /* Finova Neon Lime Green accent */
+  --color-horizon-dim: rgba(214, 255, 98, 0.25);
+  --color-signal-pos: #10d98a;  /* Finova green */
+  --color-signal-neg: #f87171;  /* light crimson */
+  --color-line: rgba(255, 255, 255, 0.18); /* Increased visibility border for dark theme */
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-paper: var(--color-paper);
+  --color-paper-raised: var(--color-paper-raised);
+  --color-horizon: var(--color-horizon);
+  --color-horizon-dim: var(--color-horizon-dim);
+  --color-signal-pos: var(--color-signal-pos);
+  --color-signal-neg: var(--color-signal-neg);
+  --color-line: var(--color-line);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.font-screamer {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+
+.font-editorial {
+  font-family: "PP Editorial New", Georgia, serif;
+}
+
+.font-figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Signature divider with dynamic neon gradient in dark theme */
+.horizon-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-horizon) 50%,
+    transparent 100%
+  );
+  opacity: 0.55;
+}
+
+/* Form selects, textareas, inputs readability */
+input, select, textarea {
+  color: var(--color-ink) !important;
+  background-color: var(--color-paper-raised) !important;
+  border-color: var(--color-line) !important;
+}
+
+select option {
+  background-color: var(--color-paper-raised) !important;
+  color: var(--color-ink) !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-horizon);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for theme switching */
+*, *::before, *::after {
+  transition-property: background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom hero section overrides to fix the light/dark contrast */
+.hero-section {
+  background-color: #0f1b33 !important; /* Always dark navy in light mode */
+  color: #f6f4ef !important;            /* Always light paper text in light mode */
+  --color-accent-hero: #e2a33d;        /* Always amber accent in light mode */
+  --color-accent-hero-dim: rgba(226, 163, 61, 0.25);
+}
+
+.dark .hero-section {
+  background-color: #080b12 !important; /* Dark Finova slate in dark mode */
+  color: #e8eaf0 !important;            /* Light grey text in dark mode */
+  --color-accent-hero: #d6ff62;        /* Neon Lime Green accent in dark mode */
+  --color-accent-hero-dim: rgba(214, 255, 98, 0.25);
+}
+
+/* Custom class to bind text/glow color to the active hero accent variable */
+.text-horizon-hero {
+  color: var(--color-accent-hero);
+}
+
+.btn-horizon-hero {
+  background-color: var(--color-accent-hero) !important;
+  color: #080b12 !important;
+}
+

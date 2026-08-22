@@ -1,0 +1,102 @@
+.bp-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+  overflow: hidden;
+}
+
+.bp-loader.is-active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.bp-loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bp-loader-hero {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  background-color: #000;
+  clip-path: polygon(0% 45%, 0% 45%, 0% 55%, 0% 55%);
+  will-change: clip-path;
+}
+
+.bp-loader-video-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: polygon(0% 49.8%, 100% 49.8%, 100% 50.2%, 0% 50.2%);
+  z-index: 1;
+}
+
+.bp-loader-video-container video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  opacity: 0.92;
+}
+
+.bp-progress-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 25vw;
+  padding: 1.25em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #d6ff62;
+  z-index: 4;
+  will-change: width, opacity;
+}
+
+.bp-progress-bar p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #d6ff62;
+  font-family: "FK Screamer", sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.bp-loader-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, rgba(214, 255, 98, 0) 0%, #d6ff62 22%, #d6ff62 78%, rgba(214, 255, 98, 0) 100%);
+  box-shadow: 0 0 22px rgba(214, 255, 98, 0.55);
+  opacity: 0;
+  will-change: transform, opacity;
+  z-index: 3;
+}
+
+@media (max-width: 900px) {
+  .bp-progress-bar {
+    width: 34vw;
+    justify-content: flex-end;
+  }
+
+  .bp-progress-bar p {
+    font-size: 11px;
+  }
+
+  .bp-progress-bar p:first-child {
+    display: none;
+  }
+}

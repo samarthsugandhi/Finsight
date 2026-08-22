@@ -1,0 +1,331 @@
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  --color-accent: #d6ff62;
+  --color-dark: #080b12;
+  --finova-border: rgba(255, 255, 255, 0.06);
+}
+
+.menu-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding: 1.25em 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.menu-bar a,
+.menu-bar p {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-family: "FK Screamer", sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.logo {
+  width: auto;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.menu-col {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+  will-change: clip-path;
+  overflow: hidden;
+}
+
+.menu-col:nth-child(1) {
+  background-color: var(--color-dark);
+}
+
+.menu-col:nth-child(2) {
+  background-color: var(--color-accent);
+  background-position: center;
+}
+
+.menu-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
+  will-change: clip-path;
+  opacity: 0.08;
+}
+
+.menu-pattern img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.menu-close {
+  position: absolute;
+  top: 1.25em;
+  right: 2em;
+  z-index: 100;
+}
+
+.menu-close p {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  font-family: "FK Screamer", sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+/* --- Menu Contact Info & Form Styles --- */
+.menu-contact-container {
+  position: absolute;
+  inset: 0;
+  padding: 5em 3.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+  background: rgba(8, 11, 18, 0.75);
+  backdrop-filter: blur(16px);
+  color: #ffffff;
+}
+
+.menu-contact-title {
+  font-family: "FK Screamer", sans-serif;
+  font-size: 44px;
+  color: var(--color-accent);
+  letter-spacing: 0.05em;
+  margin: 0 0 0.3em 0;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.menu-contact-info {
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.menu-contact-info p {
+  margin: 0;
+  font-family: "PP Editorial New", Georgia, serif;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+}
+
+.menu-contact-info a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s;
+}
+
+.menu-contact-info a:hover {
+  opacity: 0.85;
+}
+
+.menu-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85em;
+  max-width: 440px;
+}
+
+.menu-contact-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13.5px;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-contact-input:focus {
+  border-color: var(--color-accent);
+  background: rgba(214, 255, 98, 0.04);
+}
+
+.menu-contact-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.menu-contact-textarea {
+  resize: none;
+  height: 90px;
+}
+
+.menu-contact-submit {
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--color-accent);
+  color: var(--color-dark);
+  font-family: "FK Screamer", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+
+.menu-contact-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(214, 255, 98, 0.3);
+}
+
+.menu-contact-success {
+  color: var(--color-accent);
+  font-family: "FK Screamer", sans-serif;
+  font-size: 20px;
+  text-align: center;
+  padding: 0.75rem;
+  background: rgba(214, 255, 98, 0.08);
+  border: 1px solid rgba(214, 255, 98, 0.2);
+  border-radius: 0.75rem;
+  letter-spacing: 0.05em;
+  animation: pulse 1.5s infinite;
+}
+
+/* --- Menu Items Stack --- */
+.menu-items {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.15em;
+  padding-bottom: 2em;
+}
+
+.menu-item {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-item p {
+  position: relative;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.menu-item p a {
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  font-family: "FK Screamer", sans-serif;
+  font-size: 72px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition: letter-spacing 0.3s ease, color 0.3s ease;
+}
+
+.menu-item p a:hover {
+  letter-spacing: 0.05em;
+  color: #ffffff;
+}
+
+.menu-footer {
+  position: absolute;
+  left: 50%;
+  bottom: 2.5em;
+  transform: translateX(-50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  width: 100%;
+}
+
+.menu-footer p {
+  margin: 0;
+  font-family: "PP Editorial New", Georgia, serif;
+  font-size: 14px;
+  color: rgba(8, 11, 18, 0.6);
+}
+
+.menu-footer p.primary {
+  font-family: "FK Screamer", sans-serif;
+  font-size: 20px;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  letter-spacing: 0.03em;
+}
+
+.menu-close,
+.menu-item,
+.menu-footer {
+  opacity: 0;
+  will-change: opacity;
+}
+
+@media (max-width: 900px) {
+  .menu-col:nth-child(1) {
+    display: none;
+  }
+
+  .menu-footer {
+    width: 90%;
+    text-align: center;
+  }
+  
+  .menu-item p a {
+    font-size: 48px;
+  }
+  
+  .menu-item {
+    height: 52px;
+  }
+}

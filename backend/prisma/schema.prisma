@@ -1,0 +1,227 @@
+// Finsight — Core Data Model (Round 1: Core Tier)
+// After configuring DATABASE_URL in .env, run:
+//   npx prisma generate
+//   npx prisma migrate dev --name init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  transactions          Transaction[]
+  budgets               Budget[]
+  goals                 Goal[]
+  goalContributions     GoalContribution[]
+  holdings              PortfolioHolding[]
+  portfolioTransactions PortfolioTransaction[]
+
+  @@map("users")
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Category {
+  id           Int             @id @default(autoincrement())
+  name         String          @unique
+  type         TransactionType
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@map("categories")
+}
+
+model Transaction {
+  id          Int             @id @default(autoincrement())
+  amount      Decimal         @db.Decimal(12, 2)
+  type        TransactionType
+  description String?
+  date        DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@index([userId, date])
+  @@map("transactions")
+}
+
+model Budget {
+  id           Int      @id @default(autoincrement())
+  monthlyLimit Decimal  @db.Decimal(12, 2)
+  month        Int
+  year         Int
+  createdAt    DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@unique([userId, categoryId, month, year])
+  @@map("budgets")
+}
+
+model Goal {
+  id              Int       @id @default(autoincrement())
+  title           String
+  targetAmount    Decimal   @db.Decimal(12, 2)
+  targetDate      DateTime?
+  isEmergencyFund Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  contributions GoalContribution[]
+
+  @@map("goals")
+}
+
+// The source of truth for how much of a user's savings has been allocated
+// to a goal. A goal's saved/progress amount is always SUM(contributions),
+// never a manually-set field — see goal.service.ts. Deleting a goal cascades
+// to its contributions, which correctly frees that money back into the
+// user's unallocated available savings.
+model GoalContribution {
+  id        Int      @id @default(autoincrement())
+  amount    Decimal  @db.Decimal(12, 2)
+  date      DateTime @default(now())
+  note      String?
+  createdAt DateTime @default(now())
+
+  goal   Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  goalId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  @@index([userId])
+  @@index([goalId])
+  @@map("goal_contributions")
+}
+
+enum HoldingType {
+  STOCK
+  MUTUAL_FUND
+  CRYPTO
+  GOLD
+  FIXED_DEPOSIT
+}
+
+enum TransactionSide {
+  BUY
+  SELL
+}
+
+enum MarketDataStatus {
+  SUCCESS // fetched successfully within the current refresh cycle
+  STALE // a previous fetch succeeded, but the most recent attempt failed — last known price is still shown
+  UNAVAILABLE // no successful fetch has ever happened for this symbol
+}
+
+// A PortfolioHolding is the *asset shell* — what you own and how it's
+// priced — not an amount you type in. For STOCK/CRYPTO/MUTUAL_FUND/GOLD,
+// invested amount, quantity, and average buy price are always derived from
+// its PortfolioTransaction rows (see portfolio.service.ts) — never stored
+// directly, for the same reason Goal.savedAmount was removed in favor of
+// GoalContribution. FIXED_DEPOSIT is the one exception: it has no market
+// price and no BUY/SELL transactions at all — it uses principal/interest/
+// maturity fields directly, since pretending an FD has a fluctuating price
+// would be dishonest.
+model PortfolioHolding {
+  id     Int         @id @default(autoincrement())
+  type   HoldingType
+  name   String
+  // Ticker/lookup key for market data (e.g. "RELIANCE:NSE", "BTC/USD").
+  // Required for STOCK/CRYPTO (the only types with a live price feed in
+  // this build). Null for MUTUAL_FUND/GOLD (manually-priced, see
+  // manualPrice below) and FIXED_DEPOSIT (no price concept at all).
+  symbol String?
+
+  // Only used for MUTUAL_FUND and GOLD — these two types stay
+  // manually-priced for now (no reliable single-provider NAV/gold-per-gram
+  // feed), set explicitly by the user, never inferred or invented.
+  manualPrice Decimal? @db.Decimal(14, 4)
+
+  // Only used for FIXED_DEPOSIT.
+  principal      Decimal?  @db.Decimal(12, 2)
+  interestRate   Decimal?  @db.Decimal(5, 2) // annual %, e.g. 7.25
+  startDate      DateTime?
+  maturityDate   DateTime?
+  maturityAmount Decimal?  @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  transactions PortfolioTransaction[]
+
+  @@map("portfolio_holdings")
+}
+
+// A single BUY or SELL event against a holding. Quantity is Decimal(18,6)
+// to support fractional crypto/mutual-fund units. A holding's remaining
+// quantity, average buy price, and invested amount are always computed by
+// summing these rows (weighted-average-cost method) — never stored.
+model PortfolioTransaction {
+  id       Int             @id @default(autoincrement())
+  side     TransactionSide
+  quantity Decimal         @db.Decimal(18, 6)
+  price    Decimal         @db.Decimal(14, 4)
+  date     DateTime        @default(now())
+
+  createdAt DateTime @default(now())
+
+  holding   PortfolioHolding @relation(fields: [holdingId], references: [id], onDelete: Cascade)
+  holdingId Int
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+
+  @@index([holdingId])
+  @@index([userId])
+  @@map("portfolio_transactions")
+}
+
+// Persistent, app-wide cache of the last known price per symbol — shared
+// across all users who hold that symbol, refreshed on a timer (see
+// marketData.service.ts), never fetched inline during a request. The
+// Portfolio module reads only this table; it never calls the external
+// market API directly, so an API outage degrades to "stale price shown"
+// rather than a broken Portfolio page.
+model MarketPriceCache {
+  id                  Int               @id @default(autoincrement())
+  symbol              String            @unique
+  assetType           HoldingType
+  // Nullable: a symbol that has never had a successful fetch has no price
+  // at all — we never store a placeholder like 0, which would be a fake
+  // price masquerading as real data.
+  price               Decimal?          @db.Decimal(14, 4)
+  previousPrice       Decimal?          @db.Decimal(14, 4)
+  changePct           Decimal?          @db.Decimal(8, 4)
+  // ISO currency code as reported by the provider (e.g. "INR", "USD").
+  // Never assumed — Twelve Data reports this per-symbol, since NSE stocks
+  // are INR but a pair like BTC/USD is USD.
+  currency            String?
+  lastSuccessfulFetch DateTime?
+  lastAttemptAt       DateTime?
+  source              String
+  status              MarketDataStatus  @default(UNAVAILABLE)
+  updatedAt           DateTime          @updatedAt
+
+  @@map("market_price_cache")
+}
