@@ -1,3 +1,4 @@
+// Core Algorithm: Evaluates savings rate, budget adherence, and goal progress to derive a score out of 100.
 import { prisma } from "@/database/prisma";
 import { computeHealthScore } from "@/utils/healthScore";
 import { detectSpendingAnomalies } from "@/utils/spendingAnomaly";
