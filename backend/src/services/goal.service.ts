@@ -1,3 +1,4 @@
+// Validates savings target dates and fund allocation
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/middlewares/error.middleware";
