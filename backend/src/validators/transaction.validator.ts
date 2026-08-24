@@ -1,3 +1,4 @@
+// Production validation: Ensures transaction amounts are positive numbers and categories match supported types.
 import { z } from "zod";
 
 export const createTransactionSchema = z.object({
