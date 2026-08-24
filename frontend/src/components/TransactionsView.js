@@ -19,7 +19,7 @@ const MONTH_OPTIONS = [
   { value: 12, label: "December" },
 ];
 
-const YEAR_OPTIONS = [2024, 2025, 2026, 2027];
+const YEAR_OPTIONS = [2024, 2025, 2026, 2027, 2028];
 
 function normalizeTransaction(transaction) {
   return {
