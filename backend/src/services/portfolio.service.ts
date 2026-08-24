@@ -1,3 +1,7 @@
+/**
+ * Core Service: Handles investment asset transactions (Buy/Sell)
+ * Computes updated total holdings, asset allocation, and average buy price.
+ */
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/middlewares/error.middleware";
