@@ -1,3 +1,4 @@
+/** Evaluates category budget limits against total expenses and computes threshold warnings. */
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/middlewares/error.middleware";
 import { UpsertBudgetInput } from "@/validators/budget.validator";
