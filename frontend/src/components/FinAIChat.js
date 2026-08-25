@@ -1,3 +1,5 @@
+// AI Layer: Streams queries to the local Ollama instance
+// Injects user financial state dynamically for grounded advisory responses.
 "use client";
 
 import { useEffect, useRef, useState } from "react";
