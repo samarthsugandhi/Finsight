@@ -1,3 +1,5 @@
+// Caching Layer: Stores market price responses to prevent external rate-limiting
+// and provides stale-price fallbacks during third-party API downtime.
 import { prisma } from "@/database/prisma";
 import { Prisma } from "@prisma/client";
 import { env } from "@/config/env";
